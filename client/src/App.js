@@ -2,8 +2,8 @@ import React,{useState} from "react";
 import axios from 'axios';
 function App() {
   const [file, setFile] = useState('');
-  const [fileName, SetFilename] = useState("Choose file");
-  const [filePathUploaded, setUploadedFile] = useState('');
+  const [fileName, SetFilename] = useState("");
+  const [fileNameUploaded, setUploadedFile] = useState('');
 
   const onChange = e =>{
 setFile(e.target.files[0]);
@@ -20,20 +20,26 @@ SetFilename(e.target.files[0].name);
         'Content-Type': 'multipart/form-data'
       }
     }).then((response)=>{
-      const {fileName , filePath} = response.data;
-      setUploadedFile(filePath);
+      const {fileName} = response.data;
+      SetFilename(fileName);
 
     })
    
+    axios.get('http://localhost:5000/getImg/'+fileName).then((response)=>{
+      setUploadedFile(response.config.url);
+     
+    })
+
   }
-  console.log(filePathUploaded);
+  
   return (
     <div>
       <form onSubmit={click}>
         <input type="file" onChange={onChange} />
         <button >Submit</button>
         </form>
-    <img src={filePathUploaded} /> 
+        {fileNameUploaded === "" ? null : <img src={fileNameUploaded} height="200px" width="200px"/> }
+          
     </div>
   );
 }

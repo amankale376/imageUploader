@@ -7,6 +7,9 @@ const app = express();
 app.use(cors());
 app.use(fileUpload());
 
+app.get('/getImg/:path', (req, res)=>{
+    res.download(__dirname+'/public/uploads/'+req.params.path);
+});
 
 app.post('/upload',(req,res)=>{
     if(req.files === null){
@@ -15,13 +18,13 @@ app.post('/upload',(req,res)=>{
 
     const file = req.files.file;
     
-        file.mv(__dirname+'/../client/src/uploads/'+file.name, err=>{
+        file.mv(__dirname+'./public/uploads/'+file.name, err=>{
             if(err){
                 console.log(err);
                 return res.status(500).send(err);
             }
 
-            res.json({fileName:file.name, filePath:'./uploads/'+file.name});
+            res.json({fileName:file.name});
         });
 });
 
